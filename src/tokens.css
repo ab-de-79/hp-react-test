@@ -1,0 +1,48 @@
+/* Colour */
+:root {
+  /* Mode 1 */
+  /* color */
+  --black: #000000;
+  --grey-10: #ffffff;
+  --grey-20: #ebebeb;
+  --grey-60: #c2c2c2;
+  --white: #ffffff;
+}
+/* Spacing */
+:root {
+  /* Mode 1 */
+  /* number */
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-60: 60px;
+}
+/* Corner Radius */
+:root {
+  /* Mode 1 */
+  /* number */
+  --radius-card: 8px;
+}
+/* Typography */
+:root {
+  /* Mode 1 */
+  /* number */
+  --font-size-cta-mobile: 16px;
+  --font-size-category-mobile: 16px;
+  --font-size-category-desktop: 20px;
+  --font-size-category-display: 24px;
+  --font-size-cta-desktop: 28px;
+  --font-size-category-displayplus: 28px;
+  --font-size-heading-mobile: 28px;
+  --font-size-heading-desktop: 32px;
+  --font-size-cta-display: 36px;
+  --font-size-cta-displayplus: 42px;
+  --font-size-heading-display: 48px;
+  --font-size-heading-displayplus: 56px;
+  /* string */
+  --font-family-sans: ABC Arizona Sans;
+  --font-family-serif: ABC Arizona Serif;
+}
