@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import categoryImage from './assets/category-1.png'
+import AuctionSection from './components/AuctionSection'
+import HeroCarousel from './components/HeroCarousel'
 
 const categories = Array.from({ length: 5 }, (_, id) => ({ id, name: 'Category' }))
 
@@ -47,6 +49,7 @@ function App() {
 
   return (
     <main className="page">
+      <HeroCarousel />
       <section className={`category-section${showAll ? ' category-section--expanded' : ''}`} aria-labelledby="category-heading">
         <header className="category-header">
           <h1 id="category-heading">Browse <span className="desktop-copy">categories</span><span className="mobile-copy">Categories</span></h1>
@@ -76,6 +79,7 @@ function App() {
           </div>
         </div>
       </section>
+      <AuctionSection />
     </main>
   )
 }
