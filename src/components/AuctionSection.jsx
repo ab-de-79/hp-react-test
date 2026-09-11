@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import './AuctionSection.css'
 import devilWearsPradaImage from '../assets/Devil Wears Prada.png'
 
@@ -22,6 +23,34 @@ const auctions = [
     title: 'Hiroshige: Colors of the Four Seasons | The Alan Medaugh Collection',
     status: 'Registration open',
     date: '15 Sept',
+    location: 'New York',
+  },
+  {
+    id: 4,
+    title: 'South Asian Modern + Contemporary Art',
+    status: 'Open for bidding',
+    date: '16 Sept',
+    location: 'New York',
+  },
+  {
+    id: 5,
+    title: "Marr's Guitars: The Johnny Marr Collection",
+    status: 'Registration open',
+    date: '17 Sept',
+    location: 'London',
+  },
+  {
+    id: 6,
+    title: 'Ritual, Cosmos, and Imperial Splendor',
+    status: 'Registration open',
+    date: '17 Sept',
+    location: 'New York',
+  },
+  {
+    id: 7,
+    title: 'Important Chinese Art Including Ceramics from the Art Institute of Chicago',
+    status: 'Registration open',
+    date: '17-18 Sept',
     location: 'New York',
   },
 ]
@@ -69,7 +98,71 @@ function AuctionRow({ auction }) {
 }
 
 function AuctionSection() {
-  const [featuredAuction, ...upcomingAuctions] = auctions
+  const calendar = useRef(null)
+  const october = useRef(null)
+  const isSnappingCalendar = useRef(false)
+  const lastCalendarScrollTop = useRef(0)
+  const [isScrolledToOctober, setIsScrolledToOctober] = useState(false)
+  const [isCalendarAtEnd, setIsCalendarAtEnd] = useState(false)
+  const [featuredAuction, ...supportingAuctions] = auctions
+  const septemberAuctions = supportingAuctions.slice(0, 3)
+  const octoberAuctions = supportingAuctions.slice(3)
+
+  function scrollCalendar() {
+    const element = calendar.current
+    const target = october.current
+    if (!element || !target) return
+
+    isSnappingCalendar.current = true
+    element.scrollTo({
+      top: target.offsetTop,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    })
+    setIsScrolledToOctober(true)
+    window.setTimeout(() => {
+      isSnappingCalendar.current = false
+      lastCalendarScrollTop.current = element.scrollTop
+      updateCalendarState()
+    }, 500)
+  }
+
+  function updateCalendarState() {
+    const element = calendar.current
+    const target = october.current
+    if (!element || !target) return
+
+    setIsScrolledToOctober(element.scrollTop >= target.offsetTop - 8)
+    setIsCalendarAtEnd(element.scrollTop + element.clientHeight >= element.scrollHeight - 4)
+  }
+
+  function handleCalendarScroll() {
+    const element = calendar.current
+    const target = october.current
+    if (!element || !target) return
+
+    const isScrollingDown = element.scrollTop > lastCalendarScrollTop.current
+    const isLeavingTop = lastCalendarScrollTop.current <= 1 && element.scrollTop > 0
+    const isMovingDownToOctober = isLeavingTop && isScrollingDown && element.scrollTop < target.offsetTop - 8
+
+    if (isMovingDownToOctober && !isSnappingCalendar.current) {
+      scrollCalendar()
+      return
+    }
+
+    lastCalendarScrollTop.current = element.scrollTop
+    updateCalendarState()
+  }
+
+  useEffect(() => {
+    const element = calendar.current
+    if (!element) return undefined
+
+    const observer = new ResizeObserver(updateCalendarState)
+    observer.observe(element)
+    updateCalendarState()
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section className="auction-section" aria-labelledby="auction-heading">
@@ -92,28 +185,50 @@ function AuctionSection() {
           </div>
         </article>
 
-        <div className="auction-section__month-card">
-          <div className="auction-section__month">September</div>
-          <div className="auction-section__list">
-            {upcomingAuctions.map((auction) => (
-              <AuctionRow auction={auction} key={auction.id} />
-            ))}
+        <div className={`auction-section__month-card${isScrolledToOctober ? ' is-showing-october' : ''}${isCalendarAtEnd ? ' is-at-end' : ''}`}>
+          <div className="auction-section__calendar" ref={calendar} onScroll={handleCalendarScroll}>
+            <section className="auction-section__calendar-month" aria-label="September auctions">
+              <div className="auction-section__month">September</div>
+              <div className="auction-section__list">
+                {septemberAuctions.map((auction) => (
+                  <AuctionRow auction={auction} key={auction.id} />
+                ))}
+              </div>
+            </section>
+            <section className="auction-section__calendar-month" aria-label="October auctions" ref={october}>
+              <div className="auction-section__month auction-section__month--october">October</div>
+              <div className="auction-section__list">
+                {octoberAuctions.map((auction) => (
+                  <AuctionRow auction={auction} key={auction.id} />
+                ))}
+              </div>
+            </section>
           </div>
+          <button
+            className="auction-section__calendar-next"
+            type="button"
+            onClick={scrollCalendar}
+            disabled={isCalendarAtEnd}
+            aria-label="Scroll to more auctions"
+          >
+            <ArrowIcon />
+          </button>
         </div>
 
-        <div className="auction-section__mobile-card">
+        <article className="auction-section__mobile-featured">
+          <div className="auction-section__image-panel">
+            <img src={devilWearsPradaImage} alt="Red studded heels from The Devil Wears Prada auction" />
+          </div>
+          <div className="auction-section__featured-copy">
+            <h3>{featuredAuction.title}</h3>
+            <AuctionMeta auction={featuredAuction} />
+          </div>
+        </article>
+
+        <div className="auction-section__mobile-month-card">
           <div className="auction-section__month">September</div>
-          <article className="auction-section__mobile-featured">
-            <div className="auction-section__image-panel">
-              <img src={devilWearsPradaImage} alt="Red studded heels from The Devil Wears Prada auction" />
-            </div>
-            <div className="auction-section__featured-copy">
-              <h3>{featuredAuction.title}</h3>
-              <AuctionMeta auction={featuredAuction} />
-            </div>
-          </article>
           <div className="auction-section__list">
-            {upcomingAuctions.map((auction) => (
+            {supportingAuctions.map((auction) => (
               <AuctionRow auction={auction} key={auction.id} />
             ))}
           </div>

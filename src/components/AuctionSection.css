@@ -54,7 +54,8 @@
   gap: 32px;
 }
 
-.auction-section__mobile-card {
+.auction-section__mobile-featured,
+.auction-section__mobile-month-card {
   display: none;
 }
 
@@ -64,6 +65,28 @@
   border: 1px solid #ebebeb;
   border-radius: 8px;
   background: #ffffff;
+}
+
+.auction-section__month-card {
+  position: relative;
+}
+
+.auction-section__month-card::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  height: 72px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff 88%);
+  opacity: 1;
+  transition: opacity 220ms ease;
+}
+
+.auction-section__month-card.is-at-end::after {
+  opacity: 0;
 }
 
 .auction-section__image-panel {
@@ -82,23 +105,27 @@
 }
 
 .auction-section__featured-copy {
-  padding: 24px;
+  padding: 24px 24px 25px;
 }
 
 .auction-section h3 {
   margin: 0;
   font-family: 'ABC Arizona Serif', 'Times New Roman', serif;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 300;
   line-height: 1.16;
   letter-spacing: 0;
+}
+
+.auction-section__featured h3 {
+  font-size: 24px;
 }
 
 .auction-section__meta {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-top: 22px;
+  margin-top: 16px;
   color: #000000;
   font-family: 'ABC Arizona Sans', Arial, sans-serif;
   font-size: 14px;
@@ -150,7 +177,7 @@
   border-bottom: 1px solid #ebebeb;
   color: #6f6f6f;
   font-family: 'ABC Arizona Serif', 'Times New Roman', serif;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 300;
   line-height: 1;
   letter-spacing: 0;
@@ -168,16 +195,16 @@
 }
 
 .auction-section__list {
-  padding: 32px;
+  padding: 28px 32px;
 }
 
 .auction-section__row {
-  padding-bottom: 32px;
+  padding-bottom: 28px;
   border-bottom: 1px solid #ebebeb;
 }
 
 .auction-section__row + .auction-section__row {
-  padding-top: 32px;
+  padding-top: 28px;
 }
 
 .auction-section__row:last-child {
@@ -185,7 +212,104 @@
   border-bottom: 0;
 }
 
-@media (max-width: 1023px) {
+.auction-section__month--october {
+  margin-top: 28px;
+  border-top: 1px solid #ebebeb;
+}
+
+.auction-section__month--october::before {
+  opacity: 0;
+}
+
+.auction-section__month-card.is-showing-october .auction-section__month--october::before {
+  opacity: 1;
+}
+
+.auction-section__calendar {
+  max-height: 444px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.auction-section__calendar::-webkit-scrollbar {
+  display: none;
+}
+
+.auction-section__calendar-next {
+  position: absolute;
+  right: 28px;
+  bottom: 18px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #ebebeb;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #6f6f6f;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  opacity: 1;
+  transition: opacity 220ms ease, transform 220ms ease, border-color 220ms ease;
+}
+
+.auction-section__calendar-next:hover {
+  border-color: #c9c9c9;
+  transform: translateY(-2px);
+}
+
+.auction-section__calendar-next:disabled {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.auction-section__calendar-next svg {
+  width: 18px;
+  height: 18px;
+  transform: rotate(90deg);
+}
+
+@media (min-width: 1023px) and (max-width: 1279px) {
+  .auction-section {
+    padding: 40px 32px;
+  }
+
+  .auction-section__header h2,
+  .auction-section__header a {
+    font-size: 28px;
+  }
+
+  .auction-section__layout {
+    grid-template-columns: minmax(320px, 40%) minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .auction-section__image-panel {
+    height: 220px;
+  }
+
+  .auction-section__featured h3 {
+    font-size: 24px;
+  }
+
+  .auction-section__month {
+    font-size: 24px;
+  }
+
+  .auction-section__row h3 {
+    font-size: 18px;
+  }
+
+  .auction-section__meta {
+    gap: 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1022px) {
   .auction-section {
     padding: 40px 16px 32px;
   }
@@ -226,7 +350,8 @@
     display: none;
   }
 
-  .auction-section__mobile-card {
+  .auction-section__mobile-featured,
+  .auction-section__mobile-month-card {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -235,8 +360,17 @@
     background: #ffffff;
   }
 
+  .auction-section__mobile-featured {
+    margin-bottom: 20px;
+  }
+
+  .auction-section__month-card::after {
+    display: none;
+  }
+
   .auction-section__month {
     min-height: 0;
+    justify-content: flex-start;
     padding: 16px 24px;
     font-size: 24px;
   }
@@ -255,7 +389,7 @@
 
   .auction-section__featured-copy {
     order: 2;
-    padding: 16px 16px 0;
+    padding: 16px 16px 16px;
   }
 
   .auction-section h3 {
@@ -290,9 +424,8 @@
 
   .auction-section__list {
     order: 3;
-    margin: 20px 16px 0;
+    margin: 0 16px;
     padding: 0;
-    border-top: 1px solid #ebebeb;
   }
 
   .auction-section__row {
@@ -315,6 +448,10 @@
   .auction-section__location svg {
     width: 20px;
     height: 20px;
+  }
+
+  .auction-section__calendar-next {
+    display: none;
   }
 }
 

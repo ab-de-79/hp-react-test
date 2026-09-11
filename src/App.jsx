@@ -3,6 +3,7 @@ import './App.css'
 import categoryImage from './assets/category-1.png'
 import AuctionSection from './components/AuctionSection'
 import HeroCarousel from './components/HeroCarousel'
+import LotCarousel from './components/LotCarousel'
 
 const categories = Array.from({ length: 5 }, (_, id) => ({ id, name: 'Category' }))
 
@@ -80,6 +81,7 @@ function App() {
         </div>
       </section>
       <AuctionSection />
+      <LotCarousel />
     </main>
   )
 }
